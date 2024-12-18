@@ -1,12 +1,15 @@
 <script>
-  // @ts-ignore
+  import "../app.css";
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  // @ts-ignore
   import { page } from '$app/stores';
   import { userStore } from '$lib/stores/auth';
+  import { authService } from '$lib/services/auth';
 
-  // @ts-ignore
+  onMount(() => {
+	authService.initializeAuth();
+  });
+
   let user = null;
   
   userStore.subscribe(value => {
@@ -14,15 +17,14 @@
   });
   
   function logout() {
-    localStorage.removeItem('token');
-    userStore.set(null);
+	authService.logout();
     goto('/login');
   }
 </script>
 
 <nav class="bg-gray-800 text-white p-4">
   <div class="container mx-auto flex justify-between items-center">
-    <a href="/" class="text-xl font-bold">Auth Demo</a>
+    <a href="/" class="text-xl font-bold">Xseon Zero</a>
     <div class="space-x-4">
       {#if user}
         <a href="/profile" class="hover:text-gray-300">Profile</a>

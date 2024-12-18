@@ -1,5 +1,7 @@
 <script>
   import { goto } from '$app/navigation';
+  import PasswordField from '$lib/components/PasswordField.svelte';
+	import config from '$lib/config';
   import { userStore } from '$lib/stores/auth';
 
   let email = '';
@@ -10,9 +12,9 @@
   async function handleSubmit() {
     loading = true;
     error = '';
-    
+    console.log("XRT, ", config.getAuthUrl('/login'))
     try {
-      const response = await fetch('http://localhost:3000/api/auth/login', {
+      const response = await fetch(config.getAuthUrl('/login'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -23,7 +25,7 @@
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
+        throw new Error(data.message|| 'Login failed');
       }
       
       localStorage.setItem('token', data.token);
@@ -58,16 +60,7 @@
       />
     </div>
     
-    <div>
-      <label for="password" class="block mb-2">Password</label>
-      <input
-        type="password"
-        id="password"
-        bind:value={password}
-        required
-        class="w-full p-2 border rounded"
-      />
-    </div>
+    <PasswordField bind:value={password} />
     
     <button
       type="submit"

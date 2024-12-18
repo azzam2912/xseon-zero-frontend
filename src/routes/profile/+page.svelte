@@ -2,6 +2,8 @@
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { userStore } from '$lib/stores/auth';
+	import config from '$lib/config';
+  import { authService } from '$lib/services/auth';
 
   let user = null;
   let editing = false;
@@ -20,23 +22,19 @@
   });
 
   onMount(async () => {
-    if (!user) {
-      goto('/login');
-      return;
-    }
-
     await fetchProfile();
   });
 
   async function fetchProfile() {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/auth/profile', {
+      const response = await fetch(config.getAuthUrl('/profile'), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
 
+      console.log(response)
       if (!response.ok) {
         throw new Error('Failed to fetch profile');
       }
@@ -55,7 +53,7 @@
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/auth/profile', {
+      const response = await fetch(config.getAuthUrl('/profile'), {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -69,7 +67,6 @@
       if (!response.ok) {
         throw new Error(data.message || 'Update failed');
       }
-
       userStore.set(data.user);
       success = 'Profile updated successfully';
       editing = false;
