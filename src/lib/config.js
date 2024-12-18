@@ -1,15 +1,15 @@
-import { env } from '$env/dynamic/public';
+import { PUBLIC_API_DEV, PUBLIC_LOCAL_API_URL, PUBLIC_SERVER_API_URL, PUBLIC_PROD_API_URL, PUBLIC_BASE_AUTH, PUBLIC_BASE_QUIZ } from '$env/static/public';
 
-const apiBaseUrl = env.PUBLIC_API_DEV == 'local' ?  
-    env.PUBLIC_LOCAL_API_URL || 'http://localhost:3000/api' 
-       : env.PUBLIC_API_DEV == 'server' 
-          ? env.PUBLIC_SERVER_API_URL 
-          : env.PUBLIC_PROD_API_URL;
+const apiBaseUrl = PUBLIC_API_DEV === 'local' 
+  ? PUBLIC_LOCAL_API_URL || 'http://localhost:3000/api'
+  : PUBLIC_API_DEV === 'server' 
+    ? PUBLIC_SERVER_API_URL 
+    : PUBLIC_PROD_API_URL;
 
-export const config = {
+const config = {
   apiUrl: apiBaseUrl,
-  getAuthUrl: (endpoint) => `${apiBaseUrl}${env.PUBLIC_BASE_AUTH}${endpoint}`,
-  getQuizUrl: (endpoint) => `${apiBaseUrl}${env.PUBLIC_BASE_QUIZ}${endpoint}`,
+  getAuthUrl: (endpoint) => `${apiBaseUrl}${PUBLIC_BASE_AUTH}${endpoint}`,
+  getQuizUrl: (endpoint) => `${apiBaseUrl}${PUBLIC_BASE_QUIZ}${endpoint}`,
 };
 
 export default config;
