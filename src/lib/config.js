@@ -1,10 +1,10 @@
-import { PUBLIC_API_DEV, PUBLIC_LOCAL_API_URL, PUBLIC_SERVER_API_URL, PUBLIC_PROD_API_URL, PUBLIC_BASE_AUTH, PUBLIC_BASE_QUIZ } from '$env/static/public';
+import { PUBLIC_API_DEV, PUBLIC_LOCAL_API_URL, PUBLIC_SERVER_API_URL, PUBLIC_BASE_AUTH, PUBLIC_BASE_QUIZ } from '$env/static/public';
 
 const apiBaseUrl = PUBLIC_API_DEV === 'local' 
   ? PUBLIC_LOCAL_API_URL || 'http://localhost:3000/api'
   : PUBLIC_API_DEV === 'server' 
     ? PUBLIC_SERVER_API_URL 
-    : PUBLIC_PROD_API_URL;
+    : 'http://localhost:3000/api';
 
 const config = {
   apiUrl: apiBaseUrl,
