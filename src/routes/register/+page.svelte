@@ -1,5 +1,7 @@
 <script>
   import { goto } from '$app/navigation';
+  import PasswordField from '$lib/components/PasswordField.svelte';
+  import config from '$lib/config';
   import { userStore } from '$lib/stores/auth';
 
   let username = '';
@@ -7,13 +9,14 @@
   let password = '';
   let error = '';
   let loading = false;
+  let success = '';
 
   async function handleSubmit() {
     loading = true;
     error = '';
     
     try {
-      const response = await fetch('http://localhost:3000/api/auth/register', {
+      const response = await fetch(config.getAuthUrl('/register'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -29,7 +32,12 @@
       
       localStorage.setItem('token', data.token);
       userStore.set(data.user);
-      goto('/profile');
+      success = 'Registration successful, will be redirecting to profile page';
+      // wait 5 seconds before redirecting
+      setTimeout(() => {
+        goto('/profile');
+      }, 5000)
+
     } catch (err) {
       error = err.message;
     } finally {
@@ -45,6 +53,11 @@
     {#if error}
       <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
         {error}
+      </div>
+    {/if}
+    {#if success}
+      <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+        {success}
       </div>
     {/if}
     
@@ -70,16 +83,7 @@
       />
     </div>
     
-    <div>
-      <label for="password" class="block mb-2">Password</label>
-      <input
-        type="password"
-        id="password"
-        bind:value={password}
-        required
-        class="w-full p-2 border rounded"
-      />
-    </div>
+    <PasswordField bind:value={password} />
     
     <button
       type="submit"
